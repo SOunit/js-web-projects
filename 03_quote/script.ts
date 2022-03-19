@@ -1,13 +1,36 @@
 import { localQuotes } from "./quotes.js";
 
-type Quote = { text: string; author: string };
+type Quote = { text: string; author?: string };
 let apiQuotes: Quote[] = [];
+
+const quoteContainer = document.getElementById(
+  "quote-container"
+) as HTMLDivElement;
+const quoteText = document.getElementById("quote") as HTMLSpanElement;
+const authorText = document.getElementById("author") as HTMLSpanElement;
+const twitterBtn = document.getElementById("twitter") as HTMLButtonElement;
+const newQuoteBtn = document.getElementById("new-quote") as HTMLButtonElement;
 
 // Show New Quote
 function newQuote() {
   // Pick a random quote from apiQuotes array
   const quote = apiQuotes[Math.floor(Math.random() * apiQuotes.length)];
-  console.log(quote);
+
+  // Check if author field is blank and replace it with 'Unknown'
+  if (quote.author) {
+    authorText.textContent = quote.author;
+  } else {
+    authorText.textContent = "Unknown";
+  }
+
+  // Check Quote length to determine style
+  if (quote.text.length > 120) {
+    quoteText.classList.add("long-quote");
+  } else {
+    quoteText.classList.remove("long-quote");
+  }
+
+  quoteText.textContent = quote.text;
 }
 
 // Get Quotes From API
@@ -26,9 +49,19 @@ async function getQuotes() {
 function newLocalQuote() {
   // Pick a random quote from apiQuotes array
   const quote = localQuotes[Math.floor(Math.random() * localQuotes.length)];
-  console.log(quote);
 }
 
+// Tweet quote
+function tweetQuote() {
+  const twitterUrl = `
+  https://twitter.com/intent/tweet?text=${quoteText.textContent} - ${authorText.textContent}`;
+  window.open(twitterUrl, "_blank");
+}
+
+// Event Listener
+newQuoteBtn.addEventListener("click", newQuote);
+twitterBtn.addEventListener("click", tweetQuote);
+
 // On Load
-// getQuotes();
-newLocalQuote();
+getQuotes();
+// newLocalQuote();
