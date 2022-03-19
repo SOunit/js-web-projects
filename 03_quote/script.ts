@@ -1,3 +1,5 @@
+import { localQuotes } from "./quotes.js";
+
 type Quote = { text: string; author: string };
 let apiQuotes: Quote[] = [];
 
@@ -21,5 +23,12 @@ async function getQuotes() {
   }
 }
 
+function newLocalQuote() {
+  // Pick a random quote from apiQuotes array
+  const quote = localQuotes[Math.floor(Math.random() * localQuotes.length)];
+  console.log(quote);
+}
+
 // On Load
-getQuotes();
+// getQuotes();
+newLocalQuote();
